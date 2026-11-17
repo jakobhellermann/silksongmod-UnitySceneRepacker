@@ -1,33 +1,30 @@
 using System;
+using System.IO;
 using BepInEx;
-using HarmonyLib;
+using UnitySceneRepacker.Source;
+using UnityEngine;
 
-namespace UnitySceneRepacker.Source;
+namespace UnitySceneRepacker;
 
+/// Repack assets from another unity game, sharing one cache between all mods.
 [BepInAutoPlugin("io.github.jakobhellermann.unityscenerepacker")]
 public partial class UnitySceneRepackerPlugin : BaseUnityPlugin {
-    private Harmony harmony = null!;
+    public static string CacheDir { get; } = Path.Combine(Paths.CachePath, "unity-scene-repacker");
+
+    /// <see cref="UnitySceneRepacker.RepackedAssets"/> of the game in <paramref name="gameDir"/>. <paramref name="name"/> should be unique to your mod.
+    public static RepackedAssets RepackedAssets(string gameDir, string name) => new(gameDir, CacheDir, name);
+
+    /// The installation directory of a game installed next to the running one.
+    public static string NextToThisGame(string installDirName) {
+        string? installDir = Path.GetDirectoryName(Application.dataPath);
+        if (installDir!.EndsWith(".app", StringComparison.OrdinalIgnoreCase)) installDir = Path.GetDirectoryName(installDir);
+        return Path.Combine(Path.GetDirectoryName(installDir)!, installDirName);
+    }
 
     private void Awake() {
         Log.Init(Logger);
-        Log.Info($"Plugin {Name} ({Id}) has loaded!");
 
-        try {
-            harmony = Harmony.CreateAndPatchAll(GetType().Assembly);
-        } catch (Exception e) {
-            Log.Info($"Plugin {Name} ({Id}) failed to initialize: {e}");
-        }
-    }
-
-    private void OnDestroy() {
-        // Clean up everything, in order to support hot reloading
-
-        try {
-            harmony.UnpatchSelf();
-        } catch (Exception e) {
-            Log.Info($"Plugin {Name} ({Id}) failed to clean up: {e}");
-        }
-
-        Log.Info($"Plugin {Name} ({Id}) has been unloaded!");
+        var bindings = typeof(GameRepacker).Assembly;
+        Log.Info($"Plugin has loaded {bindings.GetName().Name} {bindings.GetName().Version} (format version {GameRepacker.FormatVersion})");
     }
 }

@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <!-- 
+    <!--
     Imports silksong path properties only if present in order to allow CI builds. The file should be gitignored.
     If you are checking out from git and need to create a new one, you can use `dotnet new silksongpath` to generate one.
     -->
@@ -11,13 +11,17 @@
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisMode>recommended</AnalysisMode>
         <!-- Ignore warning about processor architecture mismatch with PlayMaker ConditionalExpression -->
-        <NoWarn>$(NoWarn);MSB3270</NoWarn>
+        <NoWarn>$(NoWarn);MSB3270;CS1591</NoWarn>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
         <RestorePackagesWithLockFile>True</RestorePackagesWithLockFile>
         <RestoreLockedMode Condition="'$(CI)' == 'true'">True</RestoreLockedMode>
 
         <!-- Shortens and anonymizes paths in debug symbols relative to the project directory. Breakpoints will not work, however. -->
         <PathMap Condition="'$(Configuration)' == 'Release'">$(MSBuildProjectDirectory)=/</PathMap>
+
+        <AssemblyName>UnitySceneRepacker.Plugin</AssemblyName>
+        <PackageId>UnitySceneRepacker.Plugin</PackageId>
 
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>icon.png</PackageIcon>
@@ -27,9 +31,8 @@
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all"/>
         <PackageReference Include="BepInEx.Core" Version="5.4.21"/>
-        <PackageReference Include="HarmonyX" Version="2.9.0"/>
-        <PackageReference Include="Harmonize" Version="1.0.6" PrivateAssets="all"/>
         <PackageReference Include="Hamunii.BepInEx.AutoPlugin" Version="2.1.0" PrivateAssets="all"/>
+        <PackageReference Include="unityscenerepacker" Version="4.0.1"/>
         <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.26.0" PrivateAssets="all"/>
         <PackageReference
                 Include="UnityEngine.Modules"
@@ -69,6 +72,7 @@
         <ItemGroup>
             <Binaries Include="$(TargetPath)" LocalDir="/" PackDir="/"/>
             <Binaries Include="$(TargetDir)/$(TargetName).pdb" LocalDir="/" PackDir="/"/>
+            <Binaries Include="@(UnitySceneRepackerFiles)" LocalDir="/" PackDir="/"/>
         </ItemGroup>
         <PropertyGroup>
             <ThunderstoreDir>$(ProjectDir)/thunderstore</ThunderstoreDir>
