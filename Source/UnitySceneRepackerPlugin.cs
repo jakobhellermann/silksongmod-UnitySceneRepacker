@@ -2,10 +2,10 @@ using System;
 using BepInEx;
 using HarmonyLib;
 
-namespace ExampleMod.Source;
+namespace UnitySceneRepacker.Source;
 
-[BepInAutoPlugin("io.github.yourgithubusername.examplemod")]
-public partial class ExampleModPlugin : BaseUnityPlugin {
+[BepInAutoPlugin("io.github.jakobhellermann.unityscenerepacker")]
+public partial class UnitySceneRepackerPlugin : BaseUnityPlugin {
     private Harmony harmony = null!;
 
     private void Awake() {
