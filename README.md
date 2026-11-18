@@ -2,6 +2,19 @@
 
 Bindings for [unity-scene-repacker](https://github.com/jakobhellermann/unity-scene-repacker), allowing you to repack and instantiate objects from other unity games.
 
+## Setup
+
+You can reference the package without shipping the assemblies, since they come distributed as the dependency:
+
+```xml
+<PackageReference Include="Silksong.UnitySceneRepacker" Version="0.1.0" ExcludeAssets="runtime"/>
+```
+
+```toml
+[package.dependencies]
+jakobhellermann-UnitySceneRepacker = "0.1.0"
+```
+
 ## Example usage:
 
 ```cs
