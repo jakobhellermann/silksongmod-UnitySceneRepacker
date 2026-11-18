@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using BepInEx;
 using UnitySceneRepacker.Source;
@@ -11,8 +12,15 @@ namespace UnitySceneRepacker;
 public partial class UnitySceneRepackerPlugin : BaseUnityPlugin {
     public static string CacheDir { get; } = Path.Combine(Paths.CachePath, "unity-scene-repacker");
 
+    // HK's Trigger2dEvent adds `PlayMakerUnity2DProxy` in OnEnter, whereas in Silksong it's added during build time when preprocessing `PlayMakerTriggerEnter2D`.
+    // By marking the FSMs from HK as not preprocessed, the preprocessing happens on init, fixing the mismatch.
+    private static readonly IReadOnlyList<RewriteRule> rewriteRules = [
+        new("PlayMaker", "PlayMakerFSM", "fsm.preprocessed", false),
+        new("PlayMaker", "PlayMakerFSM", "eventHandlerComponentsAdded", false),
+    ];
+
     /// <see cref="UnitySceneRepacker.RepackedAssets"/> of the game in <paramref name="gameDir"/>. <paramref name="name"/> should be unique to your mod.
-    public static RepackedAssets RepackedAssets(string gameDir, string name) => new(gameDir, CacheDir, name);
+    public static RepackedAssets RepackedAssets(string gameDir, string name) => new(gameDir, CacheDir, name, rewriteRules);
 
     /// The installation directory of a game installed next to the running one.
     public static string NextToThisGame(string installDirName) {
