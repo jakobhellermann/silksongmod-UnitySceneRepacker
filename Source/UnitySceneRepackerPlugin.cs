@@ -20,7 +20,19 @@ public partial class UnitySceneRepackerPlugin : BaseUnityPlugin {
     ];
 
     /// <see cref="UnitySceneRepacker.RepackedAssets"/> of the game in <paramref name="gameDir"/>. <paramref name="name"/> should be unique to your mod.
-    public static RepackedAssets RepackedAssets(string gameDir, string name) => new(gameDir, CacheDir, name, rewriteRules);
+    public static RepackedAssets RepackedAssets(string gameDir, string name) => new(gameDir, GameCacheDir(gameDir), name, rewriteRules);
+
+    private static string GameCacheDir(string gameDir) {
+        gameDir = Path.GetFullPath(gameDir).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        return Path.Combine(CacheDir, $"{Path.GetFileName(gameDir)}-{StableHash(gameDir):x8}");
+    }
+
+    // FNV-1a, as string.GetHashCode can change between runs
+    private static uint StableHash(string s) {
+        uint hash = 2166136261;
+        foreach (char c in s) hash = (hash ^ c) * 16777619;
+        return hash;
+    }
 
     /// The installation directory of a game installed next to the running one.
     public static string NextToThisGame(string installDirName) {
