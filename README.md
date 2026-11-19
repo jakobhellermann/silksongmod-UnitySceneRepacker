@@ -79,3 +79,22 @@ public partial class ExampleModPlugin : BaseUnityPlugin {
     }
 }
 ```
+
+## Missing scripts
+
+Scripts that don't exist in silksong can be remapped to other scripts, in vanilla or a mod.
+Fields of the expected name can be deserialized.
+
+```cs
+UnitySceneRepackerPlugin.RemapScript("Assembly-CSharp", "EnemyHitEffectsUninfected", "Assembly-CSharp", "EnemyHitEffectsRegular");
+UnitySceneRepackerPlugin.RemapScript("Assembly-CSharp", "EnemyDreamnailReaction", typeof(DreamnailReactionBridge));
+```
+
+```cs
+public class DreamnailReactionBridge : MonoBehaviour {
+    [SerializeField] private int convoAmount;
+    [SerializeField] private string convoTitle = "";
+
+    private void Awake() => Debug.Log($"{name} has {convoAmount} dream nail texts {convoTitle}");
+}
+```

@@ -44,9 +44,9 @@
       },
       "unityscenerepacker": {
         "type": "Direct",
-        "requested": "[4.1.1, )",
-        "resolved": "4.1.1",
-        "contentHash": "0PnNoL0O9uQ2qw2ScFUumqpJ/5ylfhVjn3CdHgNNAwE8v7CIAuNOvBP6FXCdkixAQ1Evns+o/aW0CNTkL2R2Qw=="
+        "requested": "[5.0.0, )",
+        "resolved": "5.0.0",
+        "contentHash": "EceqyLVtIV4obLHQSp9W96IiApE3YOf4HSQE4IQmjIJkOmjszBJ0AwPXeaV/L4d76mEA3K1IejEnueJmSuGueg=="
       },
       "BepInEx.BaseLib": {
         "type": "Transitive",
