@@ -164,7 +164,8 @@ jobs:
       run: |-
         dotnet nuget push nuget/*.nupkg \
           --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} \
-          --source https://api.nuget.org/v3/index.json
+          --source https://api.nuget.org/v3/index.json \
+          --skip-duplicate
 
   # Publish to GitHub releases to keep release history on the repository (needed for this workflow to work properly
   # but is also nice for multiple other reasons such as auto-tagging *after* a build success)
