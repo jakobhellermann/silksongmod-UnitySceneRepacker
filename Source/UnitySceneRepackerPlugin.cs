@@ -45,8 +45,8 @@ public partial class UnitySceneRepackerPlugin : BaseUnityPlugin {
 
     /// <inheritdoc cref="RemapScript(string, string, string, string)"/>
     public static void RemapScript(string assembly, string script, Type to) {
-        if (!typeof(MonoBehaviour).IsAssignableFrom(to))
-            throw new ArgumentException($"{to} is not a MonoBehaviour", nameof(to));
+        if (!typeof(MonoBehaviour).IsAssignableFrom(to) && !typeof(ScriptableObject).IsAssignableFrom(to))
+            throw new ArgumentException($"{to} is neither a MonoBehaviour nor a ScriptableObject", nameof(to));
         // unity binds scripts by namespace and class name, which can't express nesting
         if (to.IsNested)
             throw new ArgumentException($"{to} is nested in {to.DeclaringType}", nameof(to));
